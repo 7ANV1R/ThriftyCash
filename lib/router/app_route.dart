@@ -5,16 +5,16 @@ class ScreenPaths {
   static String splash = '/';
   static String intro = '/welcome';
   static String home = '/home';
-  static String login = '/login';
+  static String auth = '/auth';
 }
 
 final appRouter = GoRouter(
-  initialLocation: ScreenPaths.login,
+  initialLocation: ScreenPaths.auth,
   routes: [
     GoRoute(
-      path: ScreenPaths.login,
+      path: ScreenPaths.auth,
       builder: (context, state) {
-        return const LoginPage();
+        return const AuthPage();
       },
     ),
   ],

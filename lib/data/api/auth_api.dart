@@ -5,10 +5,20 @@ import 'package:thrifycash/common/logic/failure.dart';
 import 'package:thrifycash/common/logic/typedefs.dart';
 import 'package:thrifycash/common/ui/logger.dart';
 
+import '../../common/logic/error_util.dart';
+
 final authAPIProvider = Provider((ref) {
   return AuthAPI(
     supabaseClient: Supabase.instance.client,
   );
+});
+
+final authUserStateProvider = StreamProvider<User?>((ref) async* {
+  final authStream = ref.read(authAPIProvider).authState;
+
+  await for (final authState in authStream) {
+    yield authState.session?.user;
+  }
 });
 
 abstract class IAuthAPI {
@@ -16,6 +26,7 @@ abstract class IAuthAPI {
     required String email,
     required String password,
   });
+  FutureEitherVoid logout();
 }
 
 class AuthAPI implements IAuthAPI {
@@ -24,6 +35,8 @@ class AuthAPI implements IAuthAPI {
   AuthAPI({
     required SupabaseClient supabaseClient,
   }) : _supabaseClient = supabaseClient;
+
+  Stream<AuthState> get authState => _supabaseClient.auth.onAuthStateChange;
 
   @override
   FutureEither<AuthResponse> loginWithEmail({required String email, required String password}) async {
@@ -34,9 +47,21 @@ class AuthAPI implements IAuthAPI {
       );
 
       return right(response);
-    } catch (e, st) {
+    } on AuthException catch (e, st) {
       LoggerManager.red('AuthAPI.loginWithEmail $e $st');
-      return left(Failure(message: e.toString(), stackTrace: st));
+      return left(Failure(message: e.message, stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEitherVoid logout() async {
+    try {
+      await _supabaseClient.auth.signOut();
+      return right(null);
+    } catch (e, st) {
+      LoggerManager.red('AuthAPI.logout $e $st');
+      final res = getErrorMessage(e);
+      return left(Failure(message: res, stackTrace: st));
     }
   }
 }

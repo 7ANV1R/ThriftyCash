@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 // 414 : TypeError
 // 413 : Unhandled Exception
 // 420 : No Internet
@@ -9,6 +11,8 @@ String getErrorMessage(dynamic e) {
   if (e is SocketException) {
     return 'Network Error: No internet connection\nErr: ERR420';
   } else if (e is HttpException) {
+    return e.message;
+  } else if (e is AuthException) {
     return e.message;
   } else if (e is TypeError) {
     return 'Type Error: Something went wrong\nErr: ERR414';
