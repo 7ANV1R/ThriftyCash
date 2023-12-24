@@ -6,15 +6,28 @@
  
  ## Getting Started 🚀
  
-To run the app use the following commands:
+To run the app first you need to create a env.json file.
+
+env.json file should look like this.
+
+```sh
+{
+ "SUPABASE_URL": "https://xxxxxxxxxxxxxxx.supabase.co",
+ "SUPABASE_ANON_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+you check example-env.json file in root directory.
+
+Then either use the launch configuration in VSCode/Android Studio or use the following commands:
 
 ```sh
 
- flutter run
+ flutter run --dart-define-from-file=env.json
 
 ```
 
-_\*App ThrifyCash works on iOS, Android._
+_\*This App works on iOS, Android._
 
 ---
 
@@ -24,15 +37,14 @@ To build apk you need to run this following commands:
 
 ```sh
 
- flutter build apk --split-per-abi
+ flutter build apk --split-per-abi --dart-define-from-file=env.json
 
  // for signed build
- flutter build appbundle
+ flutter build appbundle --dart-define-from-file=env.json
 
 ```
 
 Removing the --split-per-abi flag results in a fat APK that contains your code compiled for all the target ABIs. Such APKs are larger in size than their split counterparts, causing the user to download native binaries that are not applicable to their device’s architecture.
- 
  
  ## File Structure
 Within the download you'll find the following directories and files:
