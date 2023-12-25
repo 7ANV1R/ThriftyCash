@@ -1,10 +1,7 @@
 name: thrifycash
 description: "Smart Spending, Thrifty Living."
 
-
 publish_to: 'none' 
-
-
 
 version: 1.0.0+1
 
@@ -16,18 +13,35 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  # icon
   cupertino_icons: ^1.0.2
+  
+  # backend and localdb
   supabase_flutter: ^2.0.2
+  sqflite: ^2.3.0
+  
+  # state management
   flutter_hooks: ^0.20.3
   hooks_riverpod: ^2.4.9
+  
+  # router
   go_router: ^13.0.0
-  gap: ^3.0.1
+  
+  # loader
   flutter_spinkit: ^5.2.0
+  
+  # navbar
+  persistent_bottom_nav_bar_v2: ^4.2.8
+  
+  # utils
+  gap: ^3.0.1
   fpdart: ^1.1.0
   top_snackbar_flutter: ^3.1.0
-  persistent_bottom_nav_bar_v2: ^4.2.8
   after_layout: ^1.2.0
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+  path: ^1.8.3
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:
