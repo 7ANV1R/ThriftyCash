@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:thrifycash/common/component/loader.dart';
 import 'package:thrifycash/data/api/auth_api.dart';
-import 'package:thrifycash/features/home/homepage.dart';
+import 'package:thrifycash/features/nav_bar/main_layout_page.dart';
 
 import 'login_view.dart';
 
@@ -15,7 +15,7 @@ class AuthPage extends ConsumerWidget {
     return switch (authState) {
       AsyncData(:final value) => value == null
           ? const LoginPage()
-          : HomePage(
+          : MainLayoutPage(
               user: value,
             ),
       AsyncError() => const Scaffold(body: Text('Oops, something unexpected happened')),
