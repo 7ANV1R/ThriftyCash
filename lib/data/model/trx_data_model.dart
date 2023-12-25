@@ -54,7 +54,7 @@ class TrxDataModel {
       id: map['id'] != null ? map['id'] as int : null,
       userId: map['user_id'] != null ? map['user_id'] as String : null,
       isExpense: map['is_expense'] != null ? map['is_expense'] as int : null,
-      amount: map['amount'] != null ? map['amount'] as double : null,
+      amount: map['amount'] != null ? convertAmountToDouble(map['amount']) : null,
       note: map['note'] != null ? map['note'] as String : null,
       attachment: map['attachment'] != null ? map['attachment'] as String : null,
       attachmentLocalPath:
@@ -70,4 +70,16 @@ class TrxDataModel {
 
   factory TrxDataModel.fromJson(String source) =>
       TrxDataModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+double convertAmountToDouble(dynamic amount) {
+  if (amount is int) {
+    return amount.toDouble();
+  } else if (amount is double) {
+    return amount;
+  } else if (amount is String) {
+    return double.parse(amount);
+  } else {
+    return 0.0;
+  }
 }

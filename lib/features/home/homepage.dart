@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/common/component/filled_btn.dart';
-import 'package:thrifycash/common/component/snackbar.dart';
-import 'package:thrifycash/common/ui/gap_helper.dart';
+import '../../common/component/filled_btn.dart';
+import '../../common/component/snackbar.dart';
+import '../../common/ui/gap_helper.dart';
 
 import '../auth/controller/auth_controller.dart';
 import 'controller/homepage_controller.dart';
@@ -25,7 +25,13 @@ class HomePage extends HookConsumerWidget {
         children: [
           trxProv.when(
             data: (trxList) {
-              return Text('Trx list: $trxList');
+              return ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Text(trxList[index].note ?? '');
+                },
+                itemCount: trxList.length,
+              );
             },
             loading: () {
               return const Center(
@@ -41,7 +47,7 @@ class HomePage extends HookConsumerWidget {
           ColoredFillBtn(
             onPressed: () async {
               isLoading.value = true;
-              final res = await ref.read(authControllerProvider.notifier).logout();
+              final res = await ref.read(authControllerProvider.notifier).logout(ref);
               res.fold((l) {
                 if (context.mounted) {
                   isLoading.value = false;

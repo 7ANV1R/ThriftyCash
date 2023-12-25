@@ -1,6 +1,9 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
 import '../../common/ui/logger.dart';
+import '../local_db/trx_data_db.dart';
+import '../local_db/user_info_db.dart';
 
 class DatabaseServices {
   Database? _database;
@@ -24,18 +27,12 @@ class DatabaseServices {
   }
 
   Future<void> truncateAllData() async {
-    // await BranchesDB().truncateData();
-    // await UsersDB().truncateData();
-    // await CustomersDB().truncateData();
-    // await CustomersBankInfoDB().truncateData();
-    // await TransactionsDB().truncateData();
+    await UserInfoDB().truncateData();
+    await TrxDataDB().truncateData();
   }
 
   Future<void> onCreate(Database db, int version) async {
-    // await BranchesDB().createTable(db);
-    // await UsersDB().createTable(db);
-    // await CustomersDB().createTable(db);
-    // await CustomersBankInfoDB().createTable(db);
-    // await TransactionsDB().createTable(db);
+    await UserInfoDB().createTable(db);
+    await TrxDataDB().createTable(db);
   }
 }

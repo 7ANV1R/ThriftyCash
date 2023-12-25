@@ -1,11 +1,14 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/common/logic/failure.dart';
-import 'package:thrifycash/common/logic/typedefs.dart';
-import 'package:thrifycash/common/ui/logger.dart';
 
 import '../../common/logic/error_util.dart';
+import '../../common/logic/failure.dart';
+import '../../common/logic/typedefs.dart';
+import '../../common/ui/logger.dart';
+import '../../features/auth/auth_view.dart';
+import '../services/local_db_services.dart';
+import '../services/shared_pref_services.dart';
 
 final authAPIProvider = Provider((ref) {
   return AuthAPI(
@@ -26,7 +29,7 @@ abstract class IAuthAPI {
     required String email,
     required String password,
   });
-  FutureEitherVoid logout();
+  FutureEitherVoid logout(WidgetRef ref);
 }
 
 class AuthAPI implements IAuthAPI {
@@ -54,8 +57,13 @@ class AuthAPI implements IAuthAPI {
   }
 
   @override
-  FutureEitherVoid logout() async {
+  FutureEitherVoid logout(WidgetRef ref) async {
     try {
+      /// [delete all db data]
+      await SharedPrefServices().removeDownloadStatus();
+      await DatabaseServices().truncateAllData();
+      ref.read(isDataDownloadedProvider.notifier).update((state) => false);
+
       await _supabaseClient.auth.signOut();
       return right(null);
     } catch (e, st) {

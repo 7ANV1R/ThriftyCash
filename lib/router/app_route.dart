@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:thrifycash/features/auth/auth_view.dart';
+
+import '../features/auth/auth_view.dart';
 
 class ScreenPaths {
   static String splash = '/';

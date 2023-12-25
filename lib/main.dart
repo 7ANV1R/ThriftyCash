@@ -2,8 +2,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/const/env_const.dart';
 
+import 'const/env_const.dart';
 import 'data/services/connectivity_services.dart';
 import 'data/services/shared_pref_services.dart';
 import 'router/app_route.dart';

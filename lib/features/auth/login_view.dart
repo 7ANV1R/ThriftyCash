@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:thrifycash/common/ui/gap_helper.dart';
-import 'package:thrifycash/const/asset_const.dart';
-import 'package:thrifycash/features/auth/controller/auth_controller.dart';
 
 import '../../common/component/filled_btn.dart';
 import '../../common/component/snackbar.dart';
+import '../../common/ui/gap_helper.dart';
 import '../../common/ui/ui_utils.dart';
+import '../../const/asset_const.dart';
+import 'controller/auth_controller.dart';
 
 class LoginPage extends StatefulHookConsumerWidget {
   const LoginPage({super.key});

@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:thrifycash/common/logic/failure.dart';
-import 'package:thrifycash/common/logic/typedefs.dart';
-import 'package:thrifycash/data/api/auth_api.dart';
+import '../../../common/logic/failure.dart';
+import '../../../common/logic/typedefs.dart';
+import '../../../data/api/auth_api.dart';
 
 enum AuthStateType {
   init,
@@ -50,9 +50,9 @@ class AuthController extends Notifier<AuthState> {
     });
   }
 
-  FutureEitherVoid logout() async {
+  FutureEitherVoid logout(WidgetRef ref) async {
     final authAPI = ref.read(authAPIProvider);
-    final res = await authAPI.logout();
+    final res = await authAPI.logout(ref);
     res.fold((l) {
       return left(l);
     }, (r) {

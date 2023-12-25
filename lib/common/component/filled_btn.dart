@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:thrifycash/theme/app_theme.dart';
+
+import '../../theme/app_theme.dart';
 import '../ui/ui_utils.dart';
 import 'loader.dart';
 
