@@ -6,9 +6,9 @@ import '../../common/logic/error_util.dart';
 import '../../common/logic/failure.dart';
 import '../../common/logic/typedefs.dart';
 import '../../common/ui/logger.dart';
-import '../../features/auth/auth_view.dart';
-import '../services/local_db_services.dart';
-import '../services/shared_pref_services.dart';
+// import '../../features/auth/auth_view.dart';
+// import '../services/local_db_services.dart';
+// import '../services/shared_pref_services.dart';
 
 final authAPIProvider = Provider((ref) {
   return AuthAPI(
@@ -59,10 +59,10 @@ class AuthAPI implements IAuthAPI {
   @override
   FutureEitherVoid logout(WidgetRef ref) async {
     try {
-      /// [delete all db data]
-      await SharedPrefServices().removeDownloadStatus();
-      await DatabaseServices().truncateAllData();
-      ref.read(isDataDownloadedProvider.notifier).update((state) => false);
+      // /// [delete all db data]
+      // await SharedPrefServices().removeDownloadStatus();
+      // await DatabaseServices().truncateAllData();
+      // ref.read(isDataDownloadedProvider.notifier).update((state) => false);
 
       await _supabaseClient.auth.signOut();
       return right(null);

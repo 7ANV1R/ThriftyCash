@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:thrifycash/data/model/trx_data_model.dart';
 
 import '../../common/logic/error_util.dart';
 import '../../common/ui/logger.dart';
-import '../local_db/trx_data_db.dart';
 
 final trxAPIProvider = Provider((ref) {
   return TrxAPI(
@@ -12,7 +12,7 @@ final trxAPIProvider = Provider((ref) {
 });
 
 abstract class ITrxAPI {
-  Future<List<Map<String, dynamic>>> pullInitialTrxList();
+  Future<List<TrxDataModel>> pullInitialTrxList();
 }
 
 class TrxAPI implements ITrxAPI {
@@ -23,16 +23,16 @@ class TrxAPI implements ITrxAPI {
   }) : _supabaseClient = supabaseClient;
 
   @override
-  Future<List<Map<String, dynamic>>> pullInitialTrxList() async {
+  Future<List<TrxDataModel>> pullInitialTrxList() async {
     try {
-      List<Map<String, dynamic>> res = [];
+      List<TrxDataModel> res = [];
       await _supabaseClient.from('trx_data').select().order('created_at').then((value) {
         LoggerManager.green('TrxAPI.getTrxList $value');
         // serialize
-        res = value;
+        res = value.map((e) => TrxDataModel.fromMap(e)).toList();
       });
-      final trxDB = TrxDataDB();
-      await trxDB.batchInsertData(res);
+      // final trxDB = TrxDataDB();
+      // await trxDB.batchInsertData(res);
       return res;
     } catch (e, st) {
       LoggerManager.red('TrxAPI.getTrxList $e $st');
