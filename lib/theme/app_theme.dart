@@ -56,5 +56,5 @@ class AppCustomTheme {
 }
 
 class AppColorPallete {
-  static const Color seedColor = Color(0xFF332C2A);
+  static const Color seedColor = Color(0xFF846ff0);
 }
