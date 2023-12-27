@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:thrifycash/common/ui/gap_helper.dart';
 import 'package:thrifycash/common/ui/ui_utils.dart';
@@ -15,6 +17,7 @@ class _TempHomePageState extends ConsumerState<TempHomePage> {
   Widget build(BuildContext context) {
     final textTheme = getTextTheme(context);
     final scheme = getColorScheme(context);
+    final tabController = useTabController(initialLength: 3);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -25,15 +28,18 @@ class _TempHomePageState extends ConsumerState<TempHomePage> {
                   height: 200,
                   width: double.infinity,
                   decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.elliptical(200, 10),
+                      ),
                       gradient: LinearGradient(
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.topRight,
-                    colors: [
-                      Color(0xFF515ae9),
-                      Color(0xFF846ff0),
-                      Color(0xFFb683f9),
-                    ],
-                  )),
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                        colors: [
+                          Color(0xFF515ae9),
+                          Color(0xFF846ff0),
+                          Color(0xFFb683f9),
+                        ],
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -71,64 +77,131 @@ class _TempHomePageState extends ConsumerState<TempHomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // tab bar
+
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                kGapSpaceM,
-                                Expanded(
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) {
+                                          return SizedBox(
+                                            height: 250,
+                                            child: CupertinoDatePicker(
+                                              onDateTimeChanged: (value) {},
+                                              backgroundColor: Colors.transparent,
+                                              initialDateTime: DateTime.now(),
+                                              mode: CupertinoDatePickerMode.monthYear,
+                                            ),
+                                          );
+                                        });
+                                  },
                                   child: Row(
                                     children: [
-                                      Container(
-                                        height: 12,
-                                        width: 12,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          shape: BoxShape.circle,
+                                      Text('July 2021', style: textTheme.labelSmall),
+                                      const Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 24,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                TabBar(
+                                  tabs: const [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text('Monthly'),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text('Yearly'),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text('All'),
+                                    ),
+                                  ],
+                                  indicator: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: scheme.primary,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  labelPadding: EdgeInsets.zero,
+                                  indicatorPadding: EdgeInsets.zero,
+                                  dividerColor: Colors.transparent,
+                                  labelColor: Colors.white,
+                                  labelStyle: textTheme.labelSmall,
+                                  controller: tabController,
+                                  isScrollable: true,
+                                  indicatorWeight: 0,
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                ),
+                              ],
+                            ),
+
+                            // spent vs income
+
+                            kGapSpaceM,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '\$1,70000',
+                                        style: textTheme.headlineSmall!.copyWith(
+                                          color: Colors.red.shade900,
                                         ),
                                       ),
-                                      kGapSpaceM,
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      kGapSpaceXS,
+                                      Row(
                                         children: [
                                           Text(
                                             'Spent',
-                                            style: textTheme.labelLarge!.copyWith(
-                                              color: scheme.outline,
-                                            ),
+                                            style: textTheme.labelSmall,
                                           ),
-                                          Text(
-                                            '\$1,700',
-                                            style: textTheme.headlineSmall,
+                                          kGapSpaceXS,
+                                          const Icon(
+                                            CupertinoIcons.arrow_up_right_square,
+                                            color: Colors.red,
+                                            size: 18,
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
                                 ),
-                                kGapSpaceM,
+                                Container(
+                                  height: 40,
+                                  width: 1,
+                                  color: Colors.grey.withOpacity(0.5),
+                                ),
                                 Expanded(
-                                  child: Row(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Container(
-                                        height: 12,
-                                        width: 12,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.purple,
-                                          shape: BoxShape.circle,
+                                      Text(
+                                        '\$1,700',
+                                        style: textTheme.headlineSmall!.copyWith(
+                                          color: Colors.green.shade800,
                                         ),
                                       ),
-                                      kGapSpaceM,
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      kGapSpaceXS,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            'Spent',
-                                            style: textTheme.labelLarge!.copyWith(
-                                              color: scheme.outline,
-                                            ),
+                                          const Icon(
+                                            CupertinoIcons.arrow_down_left_square,
+                                            color: Colors.green,
+                                            size: 18,
                                           ),
+                                          kGapSpaceXS,
                                           Text(
-                                            '\$1,700',
-                                            style: textTheme.headlineSmall,
+                                            'Income',
+                                            style: textTheme.labelSmall,
                                           ),
                                         ],
                                       ),
@@ -137,18 +210,8 @@ class _TempHomePageState extends ConsumerState<TempHomePage> {
                                 ),
                               ],
                             ),
-                            kGapSpaceS,
-                            Divider(
-                              color: scheme.outline.withOpacity(0.3),
-                              thickness: 2,
-                            ),
-                            kGapSpaceM,
-                            Text(
-                              'January 2023',
-                              style: textTheme.labelLarge!.copyWith(
-                                color: scheme.outline,
-                              ),
-                            ),
+
+                            // selected month
                           ],
                         ),
                       ),
