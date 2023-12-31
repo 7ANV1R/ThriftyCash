@@ -33,3 +33,44 @@ final totalAmountProvider = StreamProvider((ref) async* {
     yield total;
   }
 });
+
+// total income count
+final totalIncomeProvider = StreamProvider((ref) async* {
+  final client = Supabase.instance.client;
+
+  final stream = client.from('trx_data').stream(primaryKey: ['id']).order('updated_at');
+
+  await for (final message in stream) {
+    // count all amount where is_expense = 0 means income and is_expense = 1 means expense
+    final data = message.map((e) => TrxDataModel.fromMap(e)).toList();
+    final double total = data.fold(0, (previousValue, element) {
+      if (element.isExpense == 0) {
+        return previousValue + element.amount!;
+      } else {
+        return previousValue;
+      }
+    });
+    yield total;
+  }
+});
+
+// total expense count
+
+final totalExpenseProvider = StreamProvider((ref) async* {
+  final client = Supabase.instance.client;
+
+  final stream = client.from('trx_data').stream(primaryKey: ['id']).order('updated_at');
+
+  await for (final message in stream) {
+    // count all amount where is_expense = 0 means income and is_expense = 1 means expense
+    final data = message.map((e) => TrxDataModel.fromMap(e)).toList();
+    final double total = data.fold(0, (previousValue, element) {
+      if (element.isExpense == 1) {
+        return previousValue + element.amount!;
+      } else {
+        return previousValue;
+      }
+    });
+    yield total;
+  }
+});
