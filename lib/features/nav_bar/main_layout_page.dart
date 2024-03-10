@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/features/temp/temp_homepage.dart';
 import '../profile/profile_page.dart';
 
 import '../../common/ui/ui_utils.dart';
@@ -96,7 +95,7 @@ class _MainLayoutPageState extends ConsumerState<MainLayoutPage> with AfterLayou
       // HomePage(
       //   user: widget.user,
       // ),
-      const TempHomePage(),
+      Container(),
       const ProfilePage(),
       const ProfilePage(),
     ];

@@ -1,6 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../features/auth/auth_view.dart';
 
 class ScreenPaths {
   static String splash = '/';
@@ -15,7 +14,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: ScreenPaths.auth,
       builder: (context, state) {
-        return const AuthPage();
+        return Container();
       },
     ),
   ],
