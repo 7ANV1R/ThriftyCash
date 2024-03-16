@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class AppCustomTheme {
   static ThemeData lightTheme = ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: AppColorPallete.seedColor),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: AppColorPallete.seedColor,
+      primary: AppColorPallete.seedColor,
+    ),
     useMaterial3: true,
 
     // appbar theme
@@ -34,6 +37,7 @@ class AppCustomTheme {
     colorScheme: ColorScheme.fromSeed(
       brightness: Brightness.dark,
       seedColor: AppColorPallete.seedColor,
+      primary: AppColorPallete.seedColor,
     ),
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
@@ -56,5 +60,5 @@ class AppCustomTheme {
 }
 
 class AppColorPallete {
-  static const Color seedColor = Color(0xFF846ff0);
+  static const Color seedColor = Color(0xFF534741);
 }

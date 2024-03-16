@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:thrifycash/features/auth/auth_root.dart';
 
 class ScreenPaths {
   static String splash = '/';
@@ -14,7 +14,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: ScreenPaths.auth,
       builder: (context, state) {
-        return Container();
+        return const AuthRoot();
       },
     ),
   ],

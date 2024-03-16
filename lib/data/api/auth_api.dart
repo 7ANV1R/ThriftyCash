@@ -16,6 +16,7 @@ final authAPIProvider = Provider((ref) {
   );
 });
 
+// this will tell user logged in or not
 final authUserStateProvider = StreamProvider<User?>((ref) async* {
   final authStream = ref.read(authAPIProvider).authState;
 
@@ -25,9 +26,13 @@ final authUserStateProvider = StreamProvider<User?>((ref) async* {
 });
 
 abstract class IAuthAPI {
-  FutureEither<AuthResponse> loginWithEmail({
+  FutureEitherVoid submitEmail({
     required String email,
-    required String password,
+  });
+
+  FutureEither<AuthResponse> submitOTP({
+    required String email,
+    required String otp,
   });
   FutureEitherVoid logout(WidgetRef ref);
 }
@@ -42,16 +47,35 @@ class AuthAPI implements IAuthAPI {
   Stream<AuthState> get authState => _supabaseClient.auth.onAuthStateChange;
 
   @override
-  FutureEither<AuthResponse> loginWithEmail({required String email, required String password}) async {
+  FutureEitherVoid submitEmail({required String email}) async {
     try {
-      final response = await _supabaseClient.auth.signInWithPassword(
+      final response = await _supabaseClient.auth.signInWithOtp(
         email: email,
-        password: password,
       );
 
       return right(response);
     } on AuthException catch (e, st) {
-      LoggerManager.red('AuthAPI.loginWithEmail $e $st');
+      LoggerManager.red('AuthAPI.submitEmail $e $st');
+      return left(Failure(message: e.message, stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEither<AuthResponse> submitOTP({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      final response = await _supabaseClient.auth.verifyOTP(
+        email: email,
+        token: otp,
+        type: OtpType.email,
+      );
+      LoggerManager.green('AuthAPI.verifyLoginOTP $response');
+
+      return right(response);
+    } on AuthException catch (e, st) {
+      LoggerManager.red('AuthAPI.submitEmail $e $st');
       return left(Failure(message: e.message, stackTrace: st));
     }
   }
