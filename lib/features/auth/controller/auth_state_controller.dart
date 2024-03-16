@@ -45,6 +45,23 @@ class AuthController extends Notifier<AuthState> {
     });
   }
 
+  void emailOTP({
+    required String otp,
+    required String email,
+  }) async {
+    state = const AuthState(state: AuthStateType.otpLoadig, res: null);
+    final authAPI = ref.read(authAPIProvider);
+    final res = await authAPI.submitOTP(
+      otp: otp,
+      email: email,
+    );
+    res.fold((l) {
+      state = AuthState(state: AuthStateType.otpError, res: l.message);
+    }, (r) {
+      state = const AuthState(state: AuthStateType.loginSuccess, res: null);
+    });
+  }
+
   FutureEitherVoid logout(WidgetRef ref) async {
     final authAPI = ref.read(authAPIProvider);
     final res = await authAPI.logout(ref);

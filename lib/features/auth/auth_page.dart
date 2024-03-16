@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:thrifycash/common/ui/gap_helper.dart';
 import 'package:thrifycash/common/ui/ui_utils.dart';
+import 'package:thrifycash/router/app_route.dart';
 import '../../common/component/filled_btn.dart';
+import '../../common/component/snackbar.dart';
 import '../../common/ui/color_helper.dart';
 import 'controller/auth_state_controller.dart';
 import 'widgets/auth_page_top_part.dart';
@@ -41,6 +44,27 @@ class _AuthPageBottomPartState extends ConsumerState<AuthPageBottomPart> {
   Widget build(BuildContext context) {
     final emailController = useTextEditingController();
     final isLoading = useState(false);
+
+    // listener
+    ref.listen(
+      authControllerProvider,
+      (previous, next) async {
+        if (next.state == AuthStateType.loading) {
+          isLoading.value = true;
+        }
+        if (next.state == AuthStateType.error) {
+          isLoading.value = false;
+
+          showErrorSnackbar(context: context, message: next.res, title: 'Error');
+        }
+        if (next.state == AuthStateType.success) {
+          isLoading.value = false;
+          // navigate to otp page
+          context.push(ScreenPaths.verifyOTP, extra: emailController.text);
+        }
+      },
+    );
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

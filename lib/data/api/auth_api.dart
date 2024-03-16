@@ -72,6 +72,8 @@ class AuthAPI implements IAuthAPI {
         type: OtpType.email,
       );
       LoggerManager.green('AuthAPI.verifyLoginOTP $response');
+      // check it's new user or not if new user then navigate to update info page otherwise take download db page
+      // TODO: check if user is new or not
 
       return right(response);
     } on AuthException catch (e, st) {
