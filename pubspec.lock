@@ -448,14 +448,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
-  pinput:
-    dependency: "direct main"
-    description:
-      name: pinput
-      sha256: "6d571e38a484f7515a52e89024ef416f11fa6171ac6f32303701374ab9890efa"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   platform:
     dependency: transitive
     description:
@@ -573,14 +565,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  smart_auth:
-    dependency: transitive
-    description:
-      name: smart_auth
-      sha256: "88aa8fe66e951c78a307f26d1c29672dce2e9eb3da2e12e853864d0e615a73ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   source_span:
     dependency: transitive
     description:
@@ -589,22 +573,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  sqflite:
-    dependency: "direct main"
-    description:
-      name: sqflite
-      sha256: a9016f495c927cb90557c909ff26a6d92d9bd54fc42ba92e19d4e79d61e798c6
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.2"
-  sqflite_common:
-    dependency: transitive
-    description:
-      name: sqflite_common
-      sha256: "3da423ce7baf868be70e2c0976c28a1bb2f73644268b7ffa7d2e08eab71f16a4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.4"
   stack_trace:
     dependency: transitive
     description:
@@ -685,14 +653,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
-  toggle_switch:
-    dependency: "direct main"
-    description:
-      name: toggle_switch
-      sha256: "8aa37981a5c64ac9cafbfbf438e64b18170b2b7b3ffa330637d127598abcc980"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
   top_snackbar_flutter:
     dependency: "direct main"
     description:
@@ -717,14 +677,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
-  universal_platform:
-    dependency: transitive
-    description:
-      name: universal_platform
-      sha256: d315be0f6641898b280ffa34e2ddb14f3d12b1a37882557869646e0cc363d0cc
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   url_launcher:
     dependency: transitive
     description:
