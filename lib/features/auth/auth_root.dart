@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:thrifycash/features/home/homepage.dart';
+import '../home/homepage.dart';
 
 import '../../common/component/loader.dart';
 import '../../data/api/auth_api.dart';

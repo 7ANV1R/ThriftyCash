@@ -6,9 +6,6 @@ import '../../common/logic/error_util.dart';
 import '../../common/logic/failure.dart';
 import '../../common/logic/typedefs.dart';
 import '../../common/ui/logger.dart';
-// import '../../features/auth/auth_view.dart';
-// import '../services/local_db_services.dart';
-// import '../services/shared_pref_services.dart';
 
 final authAPIProvider = Provider((ref) {
   return AuthAPI(
@@ -26,14 +23,11 @@ final authUserStateProvider = StreamProvider<User?>((ref) async* {
 });
 
 abstract class IAuthAPI {
-  FutureEitherVoid submitEmail({
+  FutureEither<AuthResponse> loginWithEmailPass({
     required String email,
+    required String password,
   });
 
-  FutureEither<AuthResponse> submitOTP({
-    required String email,
-    required String otp,
-  });
   FutureEitherVoid logout(WidgetRef ref);
 }
 
@@ -47,38 +41,22 @@ class AuthAPI implements IAuthAPI {
   Stream<AuthState> get authState => _supabaseClient.auth.onAuthStateChange;
 
   @override
-  FutureEitherVoid submitEmail({required String email}) async {
-    try {
-      final response = await _supabaseClient.auth.signInWithOtp(
-        email: email,
-      );
-
-      return right(response);
-    } on AuthException catch (e, st) {
-      LoggerManager.red('AuthAPI.submitEmail $e $st');
-      return left(Failure(message: e.message, stackTrace: st));
-    }
-  }
-
-  @override
-  FutureEither<AuthResponse> submitOTP({
+  FutureEither<AuthResponse> loginWithEmailPass({
     required String email,
-    required String otp,
+    required String password,
   }) async {
     try {
-      final response = await _supabaseClient.auth.verifyOTP(
+      final response = await _supabaseClient.auth.signInWithPassword(
         email: email,
-        token: otp,
-        type: OtpType.email,
+        password: password,
       );
-      LoggerManager.green('AuthAPI.verifyLoginOTP $response');
-      // check it's new user or not if new user then navigate to update info page otherwise take download db page
-      // TODO: check if user is new or not
-
       return right(response);
     } on AuthException catch (e, st) {
       LoggerManager.red('AuthAPI.submitEmail $e $st');
       return left(Failure(message: e.message, stackTrace: st));
+    } on Exception catch (e, st) {
+      LoggerManager.red('AuthAPI.submitEmail $e $st');
+      return left(Failure(message: e.toString(), stackTrace: st));
     }
   }
 

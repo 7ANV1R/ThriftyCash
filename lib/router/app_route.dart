@@ -1,13 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:thrifycash/features/auth/auth_root.dart';
-
-import '../features/auth/verify_page.dart';
+import '../features/auth/auth_root.dart';
+import '../features/auth/signup_page.dart';
 
 class ScreenPaths {
   static String splash = '/';
 
   static String auth = '/auth';
-  static String verifyOTP = '/verify-otp';
+  static String signUp = '/signup';
 }
 
 final appRouter = GoRouter(
@@ -20,10 +19,9 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: ScreenPaths.verifyOTP,
+      path: ScreenPaths.signUp,
       builder: (context, state) {
-        final payload = state.extra as String;
-        return VerifyOTPPage(payload: payload);
+        return const SignUpPage();
       },
     ),
   ],

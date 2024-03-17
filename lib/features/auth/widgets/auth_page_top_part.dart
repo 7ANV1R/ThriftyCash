@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:thrifycash/common/ui/ui_utils.dart';
+import '../../../common/ui/ui_utils.dart';
 
 import '../../../common/ui/color_helper.dart';
 import '../../../const/asset_const.dart';

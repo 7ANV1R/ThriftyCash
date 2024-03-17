@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../data/api/auth_api.dart';
+
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
   @override
@@ -8,6 +10,14 @@ class HomePage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            ref.read(authAPIProvider).logout(ref);
+          },
+          child: const Text('Logout'),
+        ),
       ),
     );
   }

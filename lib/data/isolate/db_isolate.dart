@@ -1,10 +1,10 @@
 import 'dart:isolate';
 
 import 'package:synchronized/synchronized.dart';
-import '../../common/ui/logger.dart';
-import '../services/local_db_services.dart';
 
+import '../../common/ui/logger.dart';
 import '../local_db/trx_data_db.dart';
+import '../services/local_db_services.dart';
 
 final mainThredBulkInsertReceivePort = ReceivePort();
 

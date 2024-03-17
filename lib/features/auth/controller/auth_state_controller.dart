@@ -1,17 +1,17 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../../common/logic/failure.dart';
 import '../../../common/logic/typedefs.dart';
 import '../../../data/api/auth_api.dart';
 
 enum AuthStateType {
   init,
-  loading,
-  error,
-  success,
-  otpLoadig,
-  otpError,
+  loginLoading,
+  loginError,
   loginSuccess,
+  regLoading,
+  regError,
   regSuccess,
 }
 
@@ -30,33 +30,18 @@ class AuthController extends Notifier<AuthState> {
     return const AuthState(state: AuthStateType.init, res: null);
   }
 
-  void submitEmail({
+  void loginWithEmailPass({
     required String email,
+    required String password,
   }) async {
-    state = const AuthState(state: AuthStateType.loading, res: null);
+    state = const AuthState(state: AuthStateType.loginLoading, res: null);
     final authAPI = ref.read(authAPIProvider);
-    final res = await authAPI.submitEmail(
+    final res = await authAPI.loginWithEmailPass(
       email: email,
+      password: password,
     );
     res.fold((l) {
-      state = AuthState(state: AuthStateType.error, res: l.message);
-    }, (r) {
-      state = AuthState(state: AuthStateType.success, res: email);
-    });
-  }
-
-  void emailOTP({
-    required String otp,
-    required String email,
-  }) async {
-    state = const AuthState(state: AuthStateType.otpLoadig, res: null);
-    final authAPI = ref.read(authAPIProvider);
-    final res = await authAPI.submitOTP(
-      otp: otp,
-      email: email,
-    );
-    res.fold((l) {
-      state = AuthState(state: AuthStateType.otpError, res: l.message);
+      state = AuthState(state: AuthStateType.loginError, res: l.message);
     }, (r) {
       state = const AuthState(state: AuthStateType.loginSuccess, res: null);
     });

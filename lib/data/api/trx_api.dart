@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/data/model/trx_data_model.dart';
+import '../model/trx_data_model.dart';
 
 import '../../common/logic/error_util.dart';
 import '../../common/ui/logger.dart';
