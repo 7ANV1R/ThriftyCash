@@ -114,7 +114,8 @@ class _SingUpPageBottomPartState extends ConsumerState<SingUpPageBottomPart> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   // submit email
-                  ref.read(authControllerProvider.notifier).loginWithEmailPass(
+                  ref.read(authControllerProvider.notifier).register(
+                        fullName: nameController.text,
                         email: emailController.text,
                         password: passwordController.text,
                       );

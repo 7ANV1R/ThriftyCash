@@ -14,6 +14,8 @@ class AuthRoot extends ConsumerWidget {
     final authState = ref.watch(authUserStateProvider);
 
     return switch (authState) {
+      //TODO: fix not updating the UI when user signed in
+      /// this is happening because of the `context.push` for registration that's why `AuthPage()` is not updating to `HomePage()`
       AsyncData(:final value) => value == null ? const AuthPage() : const HomePage(),
       AsyncError() => const Scaffold(body: Text('Oops, something unexpected happened')),
       _ => const LoaderPage(),

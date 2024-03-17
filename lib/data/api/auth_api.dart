@@ -28,6 +28,12 @@ abstract class IAuthAPI {
     required String password,
   });
 
+  FutureEither<AuthResponse> register({
+    required String fullName,
+    required String email,
+    required String password,
+  });
+
   FutureEitherVoid logout(WidgetRef ref);
 }
 
@@ -56,6 +62,30 @@ class AuthAPI implements IAuthAPI {
       return left(Failure(message: e.message, stackTrace: st));
     } on Exception catch (e, st) {
       LoggerManager.red('AuthAPI.submitEmail $e $st');
+      return left(Failure(message: e.toString(), stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEither<AuthResponse> register({
+    required String fullName,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await _supabaseClient.auth.signUp(
+        email: email,
+        password: password,
+        data: {
+          'fullName': fullName,
+        },
+      );
+      return right(response);
+    } on AuthException catch (e, st) {
+      LoggerManager.red('AuthAPI.register $e $st');
+      return left(Failure(message: e.message, stackTrace: st));
+    } on Exception catch (e, st) {
+      LoggerManager.red('AuthAPI.register $e $st');
       return left(Failure(message: e.toString(), stackTrace: st));
     }
   }

@@ -47,6 +47,25 @@ class AuthController extends Notifier<AuthState> {
     });
   }
 
+  void register({
+    required String fullName,
+    required String email,
+    required String password,
+  }) async {
+    state = const AuthState(state: AuthStateType.regLoading, res: null);
+    final authAPI = ref.read(authAPIProvider);
+    final res = await authAPI.register(
+      fullName: fullName,
+      email: email,
+      password: password,
+    );
+    res.fold((l) {
+      state = AuthState(state: AuthStateType.regError, res: l.message);
+    }, (r) {
+      state = const AuthState(state: AuthStateType.regSuccess, res: null);
+    });
+  }
+
   FutureEitherVoid logout(WidgetRef ref) async {
     final authAPI = ref.read(authAPIProvider);
     final res = await authAPI.logout(ref);
