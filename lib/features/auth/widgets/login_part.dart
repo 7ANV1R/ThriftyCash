@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:thrifycash/router/app_route.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';
@@ -77,7 +79,20 @@ class _LoginPartState extends ConsumerState<LoginPart> {
               return null;
             },
           ),
-          kGapSpaceM,
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                context.push(ScreenPaths.forgetPassPage);
+              },
+              child: Text(
+                'Forgot password?',
+                style: context.textTheme.labelMedium!.copyWith(
+                  color: context.scheme.primary,
+                ),
+              ),
+            ),
+          ),
           ColoredFillBtn(
             width: double.infinity,
             onPressed: () {

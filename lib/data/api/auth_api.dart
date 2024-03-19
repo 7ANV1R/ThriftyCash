@@ -22,6 +22,13 @@ final authUserStateProvider = StreamProvider<User?>((ref) async* {
   }
 });
 
+final authStateStreamProvider = StreamProvider<AuthState>((ref) async* {
+  final stream = ref.read(authAPIProvider).authState;
+  await for (final authState in stream) {
+    yield authState;
+  }
+});
+
 abstract class IAuthAPI {
   FutureEither<AuthResponse> loginWithEmailPass({
     required String email,
@@ -32,6 +39,17 @@ abstract class IAuthAPI {
     required String fullName,
     required String email,
     required String password,
+  });
+
+  FutureEitherVoid resetPassword({
+    required String email,
+  });
+  FutureEither<AuthResponse> verifyResetPasswordOTP({
+    required String token,
+  });
+
+  FutureEither<UserResponse> updatePassword({
+    required String newPassword,
   });
 
   FutureEitherVoid logout(WidgetRef ref);
@@ -56,12 +74,13 @@ class AuthAPI implements IAuthAPI {
         email: email,
         password: password,
       );
+
       return right(response);
     } on AuthException catch (e, st) {
-      LoggerManager.red('AuthAPI.submitEmail $e $st');
+      LoggerManager.red('AuthAPI.loginWithEmailPass $e $st');
       return left(Failure(message: e.message, stackTrace: st));
     } on Exception catch (e, st) {
-      LoggerManager.red('AuthAPI.submitEmail $e $st');
+      LoggerManager.red('AuthAPI.loginWithEmailPass $e $st');
       return left(Failure(message: e.toString(), stackTrace: st));
     }
   }
@@ -104,6 +123,58 @@ class AuthAPI implements IAuthAPI {
       LoggerManager.red('AuthAPI.logout $e $st');
       final res = getErrorMessage(e);
       return left(Failure(message: res, stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEitherVoid resetPassword({required String email}) async {
+    try {
+      await _supabaseClient.auth.resetPasswordForEmail(
+        email,
+      );
+
+      return right(null);
+    } on AuthException catch (e, st) {
+      LoggerManager.red('AuthAPI.resetPassword $e $st');
+      return left(Failure(message: e.message, stackTrace: st));
+    } on Exception catch (e, st) {
+      LoggerManager.red('AuthAPI.resetPassword $e $st');
+      return left(Failure(message: e.toString(), stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEither<AuthResponse> verifyResetPasswordOTP({required String token}) async {
+    try {
+      final response = await _supabaseClient.auth
+          .verifyOTP(email: 'kidafoc594@cmheia.com', token: token, type: OtpType.email);
+
+      return right(response);
+    } on AuthException catch (e, st) {
+      LoggerManager.red('AuthAPI.verifyResetPasswordOTP $e $st');
+      return left(Failure(message: e.message, stackTrace: st));
+    } on Exception catch (e, st) {
+      LoggerManager.red('AuthAPI.verifyResetPasswordOTP $e $st');
+      return left(Failure(message: e.toString(), stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEither<UserResponse> updatePassword({required String newPassword}) async {
+    try {
+      final response = await _supabaseClient.auth.updateUser(
+        UserAttributes(
+          password: newPassword,
+        ),
+      );
+
+      return right(response);
+    } on AuthException catch (e, st) {
+      LoggerManager.red('AuthAPI.verifyResetPasswordOTP $e $st');
+      return left(Failure(message: e.message, stackTrace: st));
+    } on Exception catch (e, st) {
+      LoggerManager.red('AuthAPI.verifyResetPasswordOTP $e $st');
+      return left(Failure(message: e.toString(), stackTrace: st));
     }
   }
 }
