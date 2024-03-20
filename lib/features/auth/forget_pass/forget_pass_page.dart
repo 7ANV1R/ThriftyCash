@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../common/component/filled_btn.dart';
+import '../../../common/component/snackbar.dart';
 import '../../../common/ui/gap_helper.dart';
 import '../../../common/ui/ui_utils.dart';
 import '../../../common/ui/validator.dart';
 import '../../../const/asset_const.dart';
-import 'controller/forget_pass_controller.dart';
-import '../widgets/auth_input_box.dart';
 import '../../../router/app_route.dart';
-
-import '../../../common/component/filled_btn.dart';
-import '../../../common/component/snackbar.dart';
+import '../widgets/auth_input_box.dart';
+import 'controller/forget_pass_controller.dart';
 
 class ForgetPassPage extends StatefulHookConsumerWidget {
   const ForgetPassPage({super.key});

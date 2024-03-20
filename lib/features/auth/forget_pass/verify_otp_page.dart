@@ -3,14 +3,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pinput/pinput.dart';
-import '../../../common/ui/ui_utils.dart';
-import '../../../const/asset_const.dart';
-import 'controller/forget_pass_controller.dart';
-import '../../../router/app_route.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';
 import '../../../common/ui/gap_helper.dart';
+import '../../../common/ui/ui_utils.dart';
+import '../../../const/asset_const.dart';
+import '../../../router/app_route.dart';
+import 'controller/forget_pass_controller.dart';
 
 final lastOTPProvider = StateProvider<String>((ref) {
   return '';
