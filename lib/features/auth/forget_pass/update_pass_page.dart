@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:thrifycash/common/ui/gap_helper.dart';
-import 'package:thrifycash/common/ui/ui_utils.dart';
-import 'package:thrifycash/common/ui/validator.dart';
-import 'package:thrifycash/const/asset_const.dart';
-import 'package:thrifycash/features/auth/forget_pass/controller/forget_pass_controller.dart';
+import '../../../common/ui/gap_helper.dart';
+import '../../../common/ui/ui_utils.dart';
+import '../../../common/ui/validator.dart';
+import '../../../const/asset_const.dart';
+import 'controller/forget_pass_controller.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';

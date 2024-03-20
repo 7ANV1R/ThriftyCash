@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:thrifycash/common/ui/validator.dart';
+import '../../../common/ui/validator.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';
