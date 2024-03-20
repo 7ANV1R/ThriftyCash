@@ -7,43 +7,41 @@ import 'package:thrifycash/common/ui/ui_utils.dart';
 import 'package:thrifycash/common/ui/validator.dart';
 import 'package:thrifycash/const/asset_const.dart';
 import 'package:thrifycash/features/auth/forget_pass/controller/forget_pass_controller.dart';
-import 'package:thrifycash/features/auth/widgets/auth_input_box.dart';
-import 'package:thrifycash/router/app_route.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';
+import '../../../router/app_route.dart';
+import '../widgets/auth_input_box.dart';
 
-class ForgetPassPage extends StatefulHookConsumerWidget {
-  const ForgetPassPage({super.key});
+class UpdatePasswordPage extends StatefulHookConsumerWidget {
+  const UpdatePasswordPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ForgetPassPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _UpdatePasswordPageState();
 }
 
-class _ForgetPassPageState extends ConsumerState<ForgetPassPage> {
+class _UpdatePasswordPageState extends ConsumerState<UpdatePasswordPage> {
   final _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     final isLoading = useState<bool>(false);
-    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
     // listener
     ref.listen(
       fpControllerProvider,
       (previous, next) async {
-        if (next.state == FPStateType.submitEmailLoading) {
+        if (next.state == FPStateType.updatePassLoading) {
           isLoading.value = true;
         }
-        if (next.state == FPStateType.submitEmailError) {
+        if (next.state == FPStateType.updatePassError) {
           isLoading.value = false;
 
           showErrorSnackbar(context: context, message: next.res, title: 'Error');
         }
-        if (next.state == FPStateType.submitEmailSuccess) {
+        if (next.state == FPStateType.updatePassSuccess) {
           isLoading.value = false;
-          // navigate to otp page
-          context.push(ScreenPaths.verifyResetPassOTP, extra: next.res);
+          context.go(ScreenPaths.auth);
         }
       },
     );
@@ -57,41 +55,60 @@ class _ForgetPassPageState extends ConsumerState<ForgetPassPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.asset(
-                AssetConstants.forgotPass,
+                AssetConstants.newPass,
                 height: context.screenSize.height * 0.25,
               ),
+              kGapSpaceL,
               Text(
-                'Forgot password?',
+                'Update Password',
                 style: context.textTheme.headlineMedium!.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
               kGapSpaceXS,
               Text(
-                "No worries, we've got you covered. Enter your email address and we'll send you a OTP to reset your password.",
+                "Enter your new password and confirm it to update your password.",
                 style: context.textTheme.labelMedium!.copyWith(
                   color: context.scheme.outline,
                 ),
               ),
               kGapSpaceXXL,
               AuthInputBox(
-                controller: emailController,
-                label: 'Email',
-                prefixIcon: Icons.email,
-                validator: emailValidator,
+                controller: passwordController,
+                label: 'Password',
+                prefixIcon: Icons.password,
+                obscureText: true,
+                validator: passwordValidator,
               ),
-              kGapSpaceL,
+              kGapSpaceM,
+              AuthInputBox(
+                label: 'Confirm Password',
+                prefixIcon: Icons.password,
+                obscureText: true,
+                validator: (value) {
+                  if (value != null && value.isEmpty) {
+                    return 'Please confirm your password';
+                  }
+                  if (value != passwordController.text) {
+                    return 'Password does not match';
+                  }
+                  return null;
+                },
+              ),
+              kGapSpaceM,
               ColoredFillBtn(
                 width: double.infinity,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // submit email
-                    ref.read(fpControllerProvider.notifier).resetPass(emailController.text);
+                    // update password
+                    ref.read(fpControllerProvider.notifier).updatePass(
+                          passwordController.text,
+                        );
                   }
                 },
                 isLoading: isLoading.value,
                 label: Text(
-                  'Continue',
+                  'Submit',
                   style: context.textTheme.labelLarge!.copyWith(
                     color: context.scheme.onPrimary,
                   ),

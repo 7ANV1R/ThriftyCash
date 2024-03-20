@@ -46,6 +46,7 @@ abstract class IAuthAPI {
   });
   FutureEither<AuthResponse> verifyResetPasswordOTP({
     required String token,
+    required String payload,
   });
 
   FutureEither<UserResponse> updatePassword({
@@ -144,10 +145,13 @@ class AuthAPI implements IAuthAPI {
   }
 
   @override
-  FutureEither<AuthResponse> verifyResetPasswordOTP({required String token}) async {
+  FutureEither<AuthResponse> verifyResetPasswordOTP({
+    required String token,
+    required String payload,
+  }) async {
     try {
-      final response = await _supabaseClient.auth
-          .verifyOTP(email: 'kidafoc594@cmheia.com', token: token, type: OtpType.email);
+      final response =
+          await _supabaseClient.auth.verifyOTP(email: payload, token: token, type: OtpType.email);
 
       return right(response);
     } on AuthException catch (e, st) {

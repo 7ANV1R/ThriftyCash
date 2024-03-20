@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:thrifycash/common/ui/validator.dart';
 import 'package:thrifycash/router/app_route.dart';
 
 import '../../../common/component/filled_btn.dart';
@@ -65,6 +66,7 @@ class _LoginPartState extends ConsumerState<LoginPart> {
             controller: emailController,
             label: 'Email',
             prefixIcon: Icons.email,
+            validator: emailValidator,
           ),
           kGapSpaceM,
           AuthInputBox(
@@ -72,12 +74,7 @@ class _LoginPartState extends ConsumerState<LoginPart> {
             prefixIcon: Icons.lock,
             label: 'Password',
             obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password cannot be empty';
-              }
-              return null;
-            },
+            validator: passwordValidator,
           ),
           Align(
             alignment: Alignment.centerRight,

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:thrifycash/common/ui/validator.dart';
 
 import '../../../common/component/filled_btn.dart';
 import '../../../common/component/snackbar.dart';
@@ -67,9 +68,7 @@ class _SignUpPartState extends ConsumerState<SignUpPart> {
             prefixIcon: Icons.person_pin_rounded,
             label: 'Name',
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Name cannot be empty';
-              }
+              emptyValidator(value, 'Name');
               return null;
             },
           ),
@@ -78,14 +77,7 @@ class _SignUpPartState extends ConsumerState<SignUpPart> {
             controller: emailController,
             prefixIcon: Icons.mail,
             label: 'Email',
-            validator: (value) {
-              if (value == null ||
-                  value.isEmpty ||
-                  !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
+            validator: emailValidator,
           ),
           kGapSpaceM,
           AuthInputBox(
@@ -93,12 +85,7 @@ class _SignUpPartState extends ConsumerState<SignUpPart> {
             prefixIcon: Icons.lock,
             label: 'Password',
             obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password cannot be empty';
-              }
-              return null;
-            },
+            validator: passwordValidator,
           ),
           kGapSpaceM,
           ColoredFillBtn(
