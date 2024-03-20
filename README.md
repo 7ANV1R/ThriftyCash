@@ -2,8 +2,8 @@
 
 
  ![version](https://img.shields.io/badge/version-1.0.0-blue.svg) 
- 
- 
+
+
  ## Getting Started 🚀
  
 To run the app first you need to create a env.json file.
@@ -75,3 +75,8 @@ root/
 ## Running Tests 🧪
 
 until now no test added [sad]
+
+
+ # progress screenshot
+ ![login](https://github.com/7ANV1R/ThriftyCash/assets/35481593/d4004f9f-e767-470b-afe4-edd1c816c9d4)
+
