@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'const/env_const.dart';
+import 'data/local_db/db.dart';
 import 'data/services/connectivity_services.dart';
 import 'data/services/shared_pref_services.dart';
 import 'router/app_route.dart';
@@ -20,6 +21,9 @@ void main() async {
 
   /// [initialize shared pref]
   await SharedPrefServices.init();
+
+  /// [Local DB]
+  await initDB();
 
   // Check initial connectivity state
   final Connectivity connectivity = Connectivity();
