@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:thrifycash/features/db_download/db_download.dart';
 
 import '../../common/component/loader.dart';
 import '../../data/api/auth_api.dart';
+import '../../data/services/shared_pref_services.dart';
 import '../home/homepage.dart';
 import 'authentication_page.dart';
 
@@ -22,9 +24,14 @@ class AuthRoot extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authUserStateProvider);
+    final downloadStatus = SharedPrefServices().getDownloadStatus();
 
     return switch (authState) {
-      AsyncData(:final value) => value.session?.user == null ? const AuthenticationPage() : const HomePage(),
+      AsyncData(:final value) => value.session?.user == null
+          ? const AuthenticationPage()
+          : downloadStatus == null
+              ? const DBDownloadCorePage()
+              : const HomePage(),
       AsyncError() => const Scaffold(body: Text('Oops, something unexpected happened')),
       _ => const LoaderPage(),
     };
