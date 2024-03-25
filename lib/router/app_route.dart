@@ -7,17 +7,17 @@ import '../features/auth/forget_pass/verify_otp_page.dart';
 
 class ScreenPaths {
   static String splash = '/';
-  static String auth = '/auth';
+  static String root = '/root';
   static String forgetPassPage = '/reset-password';
   static String verifyResetPassOTP = '/verify-reset-password-otp';
   static String updateNewPassword = '/update-password';
 }
 
 final appRouter = GoRouter(
-  initialLocation: ScreenPaths.auth,
+  initialLocation: ScreenPaths.root,
   routes: [
     GoRoute(
-      path: ScreenPaths.auth,
+      path: ScreenPaths.root,
       builder: (context, state) {
         return const AuthRoot();
       },

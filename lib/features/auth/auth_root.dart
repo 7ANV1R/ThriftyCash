@@ -30,7 +30,9 @@ class AuthRoot extends ConsumerWidget {
       AsyncData(:final value) => value.session?.user == null
           ? const AuthenticationPage()
           : downloadStatus == null
-              ? const DBDownloadCorePage()
+              ? DBDownloadCorePage(
+                  user: value.session!.user,
+                )
               : const HomePage(),
       AsyncError() => const Scaffold(body: Text('Oops, something unexpected happened')),
       _ => const LoaderPage(),

@@ -41,7 +41,7 @@ class _UpdatePasswordPageState extends ConsumerState<UpdatePasswordPage> {
         }
         if (next.state == FPStateType.updatePassSuccess) {
           isLoading.value = false;
-          context.go(ScreenPaths.auth);
+          context.go(ScreenPaths.root);
         }
       },
     );
