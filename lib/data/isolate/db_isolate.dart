@@ -19,7 +19,9 @@ Future<void> bulkInsertIsolate({required User user}) async {
   try {
     final token = ServicesBinding.rootIsolateToken!;
 
-    final isolate = await Isolate.spawn(_isolate, [mainThredBulkInsertReceivePort.sendPort, user, token]);
+    final isolate = await Isolate.spawn(
+        _bulkInsertIsolateEngine, [mainThredBulkInsertReceivePort.sendPort, user, token],
+        onExit: mainThredBulkInsertReceivePort.sendPort);
 
     isolate.addOnExitListener(mainThredBulkInsertReceivePort.sendPort, response: 'Exit');
   } catch (e) {
@@ -27,37 +29,31 @@ Future<void> bulkInsertIsolate({required User user}) async {
   }
 }
 
-Future<void> _isolate(List v) async {
+Future<void> _bulkInsertIsolateEngine(List v) async {
   try {
     lock.synchronized(() async {
       BackgroundIsolateBinaryMessenger.ensureInitialized(
         v.last as RootIsolateToken,
       );
-      final database = await initDB();
       final sendPort = v.first as SendPort;
+      await initDB();
+      // await db.clear();
       final user = v[1] as User;
-
-      // data
-      PersonalInfo? personalInfoVar;
-      List<TrxCategory>? categoryList;
 
       // api
       final api = DBDownloadAPI(baseURL: EnvConst.supabaseAPIUrl, apiHeader: EnvConst.apiHeader);
       // send api request
       final personalInfoData = await api.downloadPersonalInfo(userUUID: user.id.toString());
       personalInfoData.fold((l) => sendPort.send('Err'), (personalInfo) async {
-        personalInfoVar = personalInfo;
         final categoryData = await api.downloadAllCategoryData(userID: personalInfo.id.toString());
         categoryData.fold((l) => sendPort.send('Err'), (r) async {
-          categoryList = r;
+          // insert to db
+          await db.writeTxn(() async {
+            await db.personalInfos.put(personalInfo);
+            await db.trxCategorys.putAll(r);
+            sendPort.send('Done');
+          });
         });
-      });
-
-      // insert to db
-      await database.writeTxnSync(() async {
-        if (personalInfoVar != null) database.personalInfos.putSync(personalInfoVar!);
-        if (categoryList != null) database.trxCategorys.putAllSync(categoryList!);
-        sendPort.send('Done');
       });
     });
   } catch (e) {
