@@ -20,8 +20,9 @@ Future<void> bulkInsertIsolate({required User user}) async {
     final token = ServicesBinding.rootIsolateToken!;
 
     final isolate = await Isolate.spawn(
-        _bulkInsertIsolateEngine, [mainThredBulkInsertReceivePort.sendPort, user, token],
-        onExit: mainThredBulkInsertReceivePort.sendPort);
+      _bulkInsertIsolateEngine,
+      [mainThredBulkInsertReceivePort.sendPort, user, token],
+    );
 
     isolate.addOnExitListener(mainThredBulkInsertReceivePort.sendPort, response: 'Exit');
   } catch (e) {
@@ -52,6 +53,7 @@ Future<void> _bulkInsertIsolateEngine(List v) async {
             await db.personalInfos.put(personalInfo);
             await db.trxCategorys.putAll(r);
             sendPort.send('Done');
+            Isolate.exit();
           });
         });
       });
