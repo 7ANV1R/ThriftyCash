@@ -122,8 +122,6 @@ class AuthAPI implements IAuthAPI {
       await SharedPrefServices().removeDownloadStatus();
       await db.writeTxn(() async => await db.clear());
 
-      // ref.read(isDataDownloadedProvider.notifier).update((state) => false);
-
       await _supabaseClient.auth.signOut();
       return right(null);
     } catch (e, st) {

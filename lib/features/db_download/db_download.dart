@@ -5,15 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/common/component/snackbar.dart';
-import 'package:thrifycash/common/ui/logger.dart';
-import 'package:thrifycash/common/ui/ui_utils.dart';
-import 'package:thrifycash/data/isolate/db_isolate.dart';
-import 'package:thrifycash/data/services/shared_pref_services.dart';
-import 'package:thrifycash/router/app_route.dart';
+import '../../common/component/snackbar.dart';
+import '../../common/ui/logger.dart';
+import '../../common/ui/ui_utils.dart';
+import '../../data/isolate/db_isolate.dart';
+import '../../data/services/shared_pref_services.dart';
+import '../../router/app_route.dart';
 
 import '../../common/ui/gap_helper.dart';
 import 'widgets/download_img_widget.dart';
+
+final mainThreadBulkInsertStreamProvider = StreamProvider((ref) async* {
+  await for (final message in mainThredBulkInsertReceivePort) {
+    yield message;
+  }
+});
 
 class DBDownloadCorePage extends StatefulHookConsumerWidget {
   const DBDownloadCorePage({super.key, required this.user});
@@ -44,9 +50,22 @@ class DBDownloading extends StatefulHookConsumerWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DBDownloadingState();
 }
 
-class _DBDownloadingState extends ConsumerState<DBDownloading> with AfterLayoutMixin {
+class _DBDownloadingState extends ConsumerState<DBDownloading> {
   @override
   Widget build(BuildContext context) {
+    ref.listen(mainThreadBulkInsertStreamProvider, (prev, next) async {
+      LoggerManager.yellow(" Stream Isolate Message: $next");
+      if (next.value == 'Done') {
+        await SharedPrefServices().setDownloadStatus();
+
+        if (context.mounted) {
+          context.pushReplacement(ScreenPaths.root);
+        }
+      } else if (next.value == 'Err') {
+        showErrorSnackbar(context: context, title: 'Err', message: 'Err');
+      }
+    });
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -67,22 +86,5 @@ class _DBDownloadingState extends ConsumerState<DBDownloading> with AfterLayoutM
         ),
       ),
     );
-  }
-
-  @override
-  FutureOr<void> afterFirstLayout(BuildContext context) async {
-    mainThredBulkInsertReceivePort.listen((message) async {
-      LoggerManager.green("Isolate Message: $message");
-      if (message == 'Done') {
-        await SharedPrefServices().setDownloadStatus();
-        if (context.mounted) {
-          LoggerManager.yellow("We are here");
-          // mainThredBulkInsertReceivePort.close();
-          context.pushReplacement(ScreenPaths.root);
-        }
-      } else if (message == 'Err') {
-        showErrorSnackbar(context: context, title: 'Err', message: 'Err');
-      }
-    });
   }
 }

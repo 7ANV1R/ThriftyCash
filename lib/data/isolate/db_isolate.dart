@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:thrifycash/const/env_const.dart';
-import 'package:thrifycash/data/api/db_download_api.dart';
-import 'package:thrifycash/data/local_db/collections/personal_info/personal_info_collection.dart';
-import 'package:thrifycash/data/local_db/collections/trx_category/trx_category_collection.dart';
+import '../../const/env_const.dart';
+import '../api/db_download_api.dart';
+import '../local_db/collections/personal_info/personal_info_collection.dart';
+import '../local_db/collections/trx_category/trx_category_collection.dart';
+import '../local_db/collections/trx_model/trx_collection.dart';
 
 import '../../common/ui/logger.dart';
 import '../local_db/db.dart';
@@ -47,13 +49,26 @@ Future<void> _bulkInsertIsolateEngine(List v) async {
       final personalInfoData = await api.downloadPersonalInfo(userUUID: user.id.toString());
       personalInfoData.fold((l) => sendPort.send('Err'), (personalInfo) async {
         final categoryData = await api.downloadAllCategoryData(userID: personalInfo.id.toString());
-        categoryData.fold((l) => sendPort.send('Err'), (r) async {
-          // insert to db
-          await db.writeTxn(() async {
-            await db.personalInfos.put(personalInfo);
-            await db.trxCategorys.putAll(r);
-            sendPort.send('Done');
-            Isolate.exit();
+        categoryData.fold((l) => sendPort.send('Err'), (trxCategoryData) async {
+          final trxData = await api.downloadAllTrx(userUUID: user.id.toString());
+
+          trxData.fold((l) => sendPort.send('Err'), (trxList) async {
+            // insert to db
+            await db.writeTxn(() async {
+              await db.personalInfos.put(personalInfo);
+              await db.trxCategorys.putAll(trxCategoryData);
+              for (var i = 0; i < trxList.length; i++) {
+                final cat = trxCategoryData.firstWhere((element) => element.id == trxList[i].categoryID);
+                final trx = trxList[i]..category.value = cat;
+                await db.transactions.put(trx);
+                await trx.category.save();
+              }
+              sendPort.send('Done');
+
+              Isolate.current.kill(
+                priority: Isolate.beforeNextEvent,
+              );
+            });
           });
         });
       });

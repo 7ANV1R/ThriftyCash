@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thrifycash/features/db_download/db_download.dart';
+import '../db_download/db_download.dart';
 
 import '../../common/component/loader.dart';
 import '../../data/api/auth_api.dart';

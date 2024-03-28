@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
-import 'package:thrifycash/common/logic/typedefs.dart';
+import '../../common/logic/typedefs.dart';
 import 'package:http/http.dart' as http;
-import 'package:thrifycash/data/iapi/i_db_download_api.dart';
-import 'package:thrifycash/data/local_db/collections/personal_info/personal_info_collection.dart';
-import 'package:thrifycash/data/local_db/collections/trx_category/trx_category_collection.dart';
+import '../iapi/i_db_download_api.dart';
+import '../local_db/collections/personal_info/personal_info_collection.dart';
+import '../local_db/collections/trx_category/trx_category_collection.dart';
+import '../local_db/collections/trx_model/trx_collection.dart';
 
 import '../../common/logic/error_util.dart';
 import '../../common/logic/failure.dart';
@@ -72,6 +73,35 @@ class DBDownloadAPI implements IDBDownloadAPI {
       }
     } catch (e, st) {
       LoggerManager.red('DBDownloadAPI.downloadAllCategoryData $e $st');
+      final err = getErrorMessage(e);
+      return left(Failure(message: err, stackTrace: st));
+    }
+  }
+
+  @override
+  FutureEither<List<Transaction>> downloadAllTrx({required String userUUID}) async {
+    try {
+      final url = '$_baseURL/trx_data?select=*&user_id=eq.$userUUID';
+      LoggerManager.green('url:  $url');
+      final apiRes = await http.get(Uri.parse(url), headers: _apiHeader);
+      if (apiRes.statusCode == 200) {
+        final decodedResponse = json.decode(apiRes.body);
+        final List<Transaction> data = List<Transaction>.from(
+          (decodedResponse as List).map(
+            (e) => Transaction.fromJson(e as Map<String, dynamic>),
+          ),
+        ).toList();
+        return right(data);
+      } else {
+        LoggerManager.red('DBDownloadAPI.downloadAllTrx ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
+        return left(
+          Failure(
+            message: '${apiRes.body} Err: ERR${apiRes.statusCode}',
+          ),
+        );
+      }
+    } catch (e, st) {
+      LoggerManager.red('DBDownloadAPI.downloadAllTrx $e $st');
       final err = getErrorMessage(e);
       return left(Failure(message: err, stackTrace: st));
     }
