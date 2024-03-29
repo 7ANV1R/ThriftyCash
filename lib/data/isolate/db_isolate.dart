@@ -4,13 +4,13 @@ import 'dart:isolate';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:synchronized/synchronized.dart';
+
+import '../../common/ui/logger.dart';
 import '../../const/env_const.dart';
 import '../api/db_download_api.dart';
 import '../local_db/collections/personal_info/personal_info_collection.dart';
 import '../local_db/collections/trx_category/trx_category_collection.dart';
 import '../local_db/collections/trx_model/trx_collection.dart';
-
-import '../../common/ui/logger.dart';
 import '../local_db/db.dart';
 
 final mainThredBulkInsertReceivePort = ReceivePort();
@@ -47,12 +47,12 @@ Future<void> _bulkInsertIsolateEngine(List v) async {
       final api = DBDownloadAPI(baseURL: EnvConst.supabaseAPIUrl, apiHeader: EnvConst.apiHeader);
       // send api request
       final personalInfoData = await api.downloadPersonalInfo(userUUID: user.id.toString());
-      personalInfoData.fold((l) => sendPort.send('Err'), (personalInfo) async {
+      personalInfoData.fold((l) => sendPort.send('Err414'), (personalInfo) async {
         final categoryData = await api.downloadAllCategoryData(userID: personalInfo.id.toString());
-        categoryData.fold((l) => sendPort.send('Err'), (trxCategoryData) async {
+        categoryData.fold((l) => sendPort.send('Err415'), (trxCategoryData) async {
           final trxData = await api.downloadAllTrx(userUUID: user.id.toString());
 
-          trxData.fold((l) => sendPort.send('Err'), (trxList) async {
+          trxData.fold((l) => sendPort.send('Err416'), (trxList) async {
             // insert to db
             await db.writeTxn(() async {
               await db.personalInfos.put(personalInfo);

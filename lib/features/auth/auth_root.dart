@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../db_download/db_download.dart';
 
 import '../../common/component/loader.dart';
 import '../../data/api/auth_api.dart';
 import '../../data/services/shared_pref_services.dart';
+import '../db_download/db_download.dart';
 import '../home/homepage.dart';
 import 'authentication_page.dart';
 

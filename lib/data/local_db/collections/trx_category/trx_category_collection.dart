@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+
 part 'trx_category_collection.g.dart';
 
 @Collection()

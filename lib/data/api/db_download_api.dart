@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:fpdart/fpdart.dart';
-import '../../common/logic/typedefs.dart';
 import 'package:http/http.dart' as http;
+
+import '../../common/logic/error_util.dart';
+import '../../common/logic/failure.dart';
+import '../../common/logic/typedefs.dart';
+import '../../common/ui/logger.dart';
 import '../iapi/i_db_download_api.dart';
 import '../local_db/collections/personal_info/personal_info_collection.dart';
 import '../local_db/collections/trx_category/trx_category_collection.dart';
 import '../local_db/collections/trx_model/trx_collection.dart';
-
-import '../../common/logic/error_util.dart';
-import '../../common/logic/failure.dart';
-import '../../common/ui/logger.dart';
 
 class DBDownloadAPI implements IDBDownloadAPI {
   final String _baseURL;
