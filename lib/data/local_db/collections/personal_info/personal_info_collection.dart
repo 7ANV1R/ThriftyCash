@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+
 part 'personal_info_collection.g.dart';
 
 @Collection()

@@ -74,8 +74,10 @@ class AuthController extends Notifier<AuthState> {
     }, (r) {
       return right(r);
     });
-    return left(const Failure(
-      message: 'Logout failed',
-    ));
+    return left(
+      const Failure(
+        message: 'Logout failed',
+      ),
+    );
   }
 }

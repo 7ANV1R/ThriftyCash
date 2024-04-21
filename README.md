@@ -71,6 +71,13 @@ root/
 └── test
 ```
 
+## TODO:
+
+[ ] Homepage UI
+[ ] Display Data Properly
+[ ] CRUD trx offline
+[ ] Sync CRUD
+
 ## Running Tests 🧪
 
 until now no test added [sad]
