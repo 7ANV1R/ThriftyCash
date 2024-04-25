@@ -5,7 +5,7 @@ part 'trx_category_collection.g.dart';
 @Collection()
 class TrxCategory {
   Id localId = Isar.autoIncrement;
-  @Index(replace: true)
+  @Index(unique: true, replace: true)
   int? id;
   @Index()
   bool? isExpense;

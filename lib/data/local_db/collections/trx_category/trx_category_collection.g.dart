@@ -64,6 +64,19 @@ const TrxCategorySchema = CollectionSchema(
   deserializeProp: _trxCategoryDeserializeProp,
   idName: r'localId',
   indexes: {
+    r'id': IndexSchema(
+      id: -3268401673993471357,
+      name: r'id',
+      unique: true,
+      replace: true,
+      properties: [
+        IndexPropertySchema(
+          name: r'id',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
     r'isExpense': IndexSchema(
       id: -9091271992371882740,
       name: r'isExpense',
@@ -223,11 +236,73 @@ void _trxCategoryAttach(
   object.localId = id;
 }
 
+extension TrxCategoryByIndex on IsarCollection<TrxCategory> {
+  Future<TrxCategory?> getById(int? id) {
+    return getByIndex(r'id', [id]);
+  }
+
+  TrxCategory? getByIdSync(int? id) {
+    return getByIndexSync(r'id', [id]);
+  }
+
+  Future<bool> deleteById(int? id) {
+    return deleteByIndex(r'id', [id]);
+  }
+
+  bool deleteByIdSync(int? id) {
+    return deleteByIndexSync(r'id', [id]);
+  }
+
+  Future<List<TrxCategory?>> getAllById(List<int?> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndex(r'id', values);
+  }
+
+  List<TrxCategory?> getAllByIdSync(List<int?> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'id', values);
+  }
+
+  Future<int> deleteAllById(List<int?> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'id', values);
+  }
+
+  int deleteAllByIdSync(List<int?> idValues) {
+    final values = idValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'id', values);
+  }
+
+  Future<Id> putById(TrxCategory object) {
+    return putByIndex(r'id', object);
+  }
+
+  Id putByIdSync(TrxCategory object, {bool saveLinks = true}) {
+    return putByIndexSync(r'id', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllById(List<TrxCategory> objects) {
+    return putAllByIndex(r'id', objects);
+  }
+
+  List<Id> putAllByIdSync(List<TrxCategory> objects, {bool saveLinks = true}) {
+    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
+  }
+}
+
 extension TrxCategoryQueryWhereSort
     on QueryBuilder<TrxCategory, TrxCategory, QWhere> {
   QueryBuilder<TrxCategory, TrxCategory, QAfterWhere> anyLocalId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'id'),
+      );
     });
   }
 
@@ -314,6 +389,115 @@ extension TrxCategoryQueryWhere
         lower: lowerLocalId,
         includeLower: includeLower,
         upper: upperLocalId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idEqualTo(int? id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'id',
+        value: [id],
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idNotEqualTo(
+      int? id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [id],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'id',
+              lower: [],
+              upper: [id],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idGreaterThan(
+    int? id, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id',
+        lower: [id],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idLessThan(
+    int? id, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id',
+        lower: [],
+        upper: [id],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<TrxCategory, TrxCategory, QAfterWhereClause> idBetween(
+    int? lowerId,
+    int? upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'id',
+        lower: [lowerId],
+        includeLower: includeLower,
+        upper: [upperId],
         includeUpper: includeUpper,
       ));
     });

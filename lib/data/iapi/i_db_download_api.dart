@@ -7,4 +7,6 @@ abstract class IDBDownloadAPI {
   FutureEither<PersonalInfo> downloadPersonalInfo({required String userUUID});
   FutureEither<List<TrxCategory>> downloadAllCategoryData({required String userID});
   FutureEither<List<Transaction>> downloadAllTrx({required String userUUID});
+
+  FutureEither<String> testAPI();
 }

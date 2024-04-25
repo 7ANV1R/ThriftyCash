@@ -106,4 +106,28 @@ class DBDownloadAPI implements IDBDownloadAPI {
       return left(Failure(message: err, stackTrace: st));
     }
   }
+
+  @override
+  FutureEither<String> testAPI() async {
+    try {
+      const url = 'https://jsonplaceholder.typicode.com/albums/1';
+      LoggerManager.green('url:  $url');
+      final apiRes = await http.get(Uri.parse(url));
+      if (apiRes.statusCode == 200) {
+        final decodedResponse = json.decode(apiRes.body);
+        return right(decodedResponse['title'] as String);
+      } else {
+        LoggerManager.red('DBDownloadAPI.testAPI ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
+        return left(
+          Failure(
+            message: '${apiRes.body} Err: ERR${apiRes.statusCode}',
+          ),
+        );
+      }
+    } catch (e, st) {
+      LoggerManager.red('DBDownloadAPI.testAPI $e $st');
+      final err = getErrorMessage(e);
+      return left(Failure(message: err, stackTrace: st));
+    }
+  }
 }
