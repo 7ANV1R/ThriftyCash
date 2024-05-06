@@ -18,12 +18,21 @@ class HomePage extends StatefulHookConsumerWidget {
 class _TempHomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final trxStream = ref.watch(allTrxDataStreamProvider);
+    final trxStream = ref.watch(allTrxDataStreamProvider(null));
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           const HomepageMainStatsPart(),
           kSliverGapSpaceL,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Recent Transactions',
+                style: context.textTheme.bodySmall,
+              ),
+            ),
+          ),
           trxStream.when(
             data: (trxList) {
               return SliverList(

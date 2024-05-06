@@ -12,11 +12,15 @@ final trxAPIProvider = Provider<TrxAPI>((ref) {
 
 class TrxAPI implements ITrxAPI {
   @override
-  Stream<List<Transaction>> fetchAllTrx() async* {
+  Stream<List<Transaction>> fetchAllTrx(int? limit) async* {
     try {
-      final data = db.transactions.where().watch(
-            fireImmediately: true,
-          );
+      final data = limit == null
+          ? db.transactions.where().watch(
+                fireImmediately: true,
+              )
+          : db.transactions.where().limit(10).watch(
+                fireImmediately: true,
+              );
       yield* data;
     } catch (e, st) {
       LoggerManager.red('[fetchAllTrx] Error: $e \n $st');

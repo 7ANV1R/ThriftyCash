@@ -13,13 +13,16 @@ import '../local_db/collections/trx_category/trx_category_collection.dart';
 import '../local_db/collections/trx_model/trx_collection.dart';
 
 class DBDownloadAPI implements IDBDownloadAPI {
+  final http.Client _client;
   final String _baseURL;
   final Map<String, String>? _apiHeader;
 
   DBDownloadAPI({
+    http.Client? client,
     required String baseURL,
     required Map<String, String>? apiHeader,
-  })  : _baseURL = baseURL,
+  })  : _client = client ?? http.Client(),
+        _baseURL = baseURL,
         _apiHeader = apiHeader;
 
   @override
@@ -27,14 +30,14 @@ class DBDownloadAPI implements IDBDownloadAPI {
     try {
       final url = '$_baseURL/user_info?select=*&user_id=eq.$userUUID';
       LoggerManager.green('url:  $url\nHeader: $_apiHeader');
-      final apiRes = await http.get(Uri.parse(url), headers: _apiHeader);
+      final apiRes = await _client.get(Uri.parse(url), headers: _apiHeader);
       if (apiRes.statusCode == 200) {
         final decodedResponse = json.decode(apiRes.body);
         final PersonalInfo data = PersonalInfo.fromJson(decodedResponse[0] as Map<String, dynamic>);
         return right(data);
       } else {
         LoggerManager.red(
-            'DBDownloadAPI.downloadPersonalInfo ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
+            '[DBDownloadAPI.downloadPersonalInfo] ${apiRes.body} ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
         return left(
           Failure(
             message: '${apiRes.body} Err: ERR${apiRes.statusCode}',
@@ -53,7 +56,7 @@ class DBDownloadAPI implements IDBDownloadAPI {
     try {
       final url = '$_baseURL/trx_category?select=*&user_id=in.(0,$userID)';
       LoggerManager.green('url:  $url');
-      final apiRes = await http.get(Uri.parse(url), headers: _apiHeader);
+      final apiRes = await _client.get(Uri.parse(url), headers: _apiHeader);
       if (apiRes.statusCode == 200) {
         final decodedResponse = json.decode(apiRes.body);
         final List<TrxCategory> data = List<TrxCategory>.from(
@@ -64,17 +67,20 @@ class DBDownloadAPI implements IDBDownloadAPI {
         return right(data);
       } else {
         LoggerManager.red(
-            'DBDownloadAPI.downloadAllCategoryData ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
+            '[DBDownloadAPI.downloadAllCategoryData] ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode} Response: ${apiRes.body}');
         return left(
           Failure(
-            message: '${apiRes.body} Err: ERR${apiRes.statusCode}',
+            message:
+                '[DBDownloadAPI.downloadAllCategoryData] Code: ${apiRes.statusCode} ${apiRes.reasonPhrase} Response: ${apiRes.body}',
           ),
         );
       }
     } catch (e, st) {
-      LoggerManager.red('DBDownloadAPI.downloadAllCategoryData $e $st');
+      LoggerManager.red('[DBDownloadAPI.downloadAllCategoryData] $e $st');
       final err = getErrorMessage(e);
-      return left(Failure(message: err, stackTrace: st));
+      return left(Failure(
+          message: "[DBDownloadAPI.downloadAllCategoryData] Err: $e\nCustomer Err: $err\nST: $st",
+          stackTrace: st));
     }
   }
 
@@ -83,7 +89,7 @@ class DBDownloadAPI implements IDBDownloadAPI {
     try {
       final url = '$_baseURL/trx_data?select=*&user_id=eq.$userUUID';
       LoggerManager.green('url:  $url');
-      final apiRes = await http.get(Uri.parse(url), headers: _apiHeader);
+      final apiRes = await _client.get(Uri.parse(url), headers: _apiHeader);
       if (apiRes.statusCode == 200) {
         final decodedResponse = json.decode(apiRes.body);
         final List<Transaction> data = List<Transaction>.from(
@@ -102,30 +108,6 @@ class DBDownloadAPI implements IDBDownloadAPI {
       }
     } catch (e, st) {
       LoggerManager.red('DBDownloadAPI.downloadAllTrx $e $st');
-      final err = getErrorMessage(e);
-      return left(Failure(message: err, stackTrace: st));
-    }
-  }
-
-  @override
-  FutureEither<String> testAPI() async {
-    try {
-      const url = 'https://jsonplaceholder.typicode.com/albums/1';
-      LoggerManager.green('url:  $url');
-      final apiRes = await http.get(Uri.parse(url));
-      if (apiRes.statusCode == 200) {
-        final decodedResponse = json.decode(apiRes.body);
-        return right(decodedResponse['title'] as String);
-      } else {
-        LoggerManager.red('DBDownloadAPI.testAPI ${apiRes.reasonPhrase} Err: ERR${apiRes.statusCode}');
-        return left(
-          Failure(
-            message: '${apiRes.body} Err: ERR${apiRes.statusCode}',
-          ),
-        );
-      }
-    } catch (e, st) {
-      LoggerManager.red('DBDownloadAPI.testAPI $e $st');
       final err = getErrorMessage(e);
       return left(Failure(message: err, stackTrace: st));
     }

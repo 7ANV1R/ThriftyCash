@@ -42,6 +42,12 @@ class TrxCategory {
       needToSync: 0,
     );
   }
+
+  // toString
+  @override
+  String toString() {
+    return 'TrxCategory(id: $id, name: $name)';
+  }
 }
 
 
